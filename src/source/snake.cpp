@@ -15,27 +15,27 @@ Game::Game(int width, int height, int speed, Difficulty d) {
   width_ = width;
   height_ = height;
   speed_ = speed;
-	score_ = 0;
+  score_ = 0;
   switch (d) {
     case Easy:
       speedIncrement_ = 1;
-			scoreMultiplier_ = 1; 
+      scoreMultiplier_ = 1; 
       break;
     case Medium:
       speedIncrement_ = 2;
-			scoreMultiplier_ = 2;
+      scoreMultiplier_ = 2;
       break;
     case Hard:
       speedIncrement_ = 3;
-			scoreMultiplier_ = 3;
+      scoreMultiplier_ = 3;
       break;
     case Extreme:
       speedIncrement_ = 5;
-			scoreMultiplier_ = 4;
+      scoreMultiplier_ = 4;
       break;
     default:
       speedIncrement_ = 5;
-			scoreMultiplier_ = 2; 
+      scoreMultiplier_ = 2; 
       break;
   }
   initScreen();
@@ -48,7 +48,7 @@ Game::~Game() {
 
 void Game::initScreen() {
   initscr();
-	curs_set(0);
+  curs_set(0);
   cbreak();
   timeout(0);
   keypad(stdscr, TRUE);
@@ -56,7 +56,7 @@ void Game::initScreen() {
 
 void Game::endGame() {
   endwin();
-	std::cout << "Final Score: " << score_ << std::endl;
+  std::cout << "Final Score: " << score_ << std::endl;
 }
 
 int Game::getSpeed() {
@@ -74,10 +74,10 @@ void Game::updateScreen() {
 
 void Game::updateScore() {
   // row 0, column will be the width + some number 
-	std::string s = std::to_string(score_);
-	char const *pchar = s.c_str();  
-	mvprintw(0, width_ + 3, "%s", "Score: ");  
-	mvprintw(0, width_ + 10, "%s", pchar);
+  std::string s = std::to_string(score_);
+  char const *pchar = s.c_str();  
+  mvprintw(0, width_ + 3, "%s", "Score: ");  
+  mvprintw(0, width_ + 10, "%s", pchar);
   refresh();
 }
 
@@ -120,8 +120,8 @@ int Game::moveSnake(Direction d) {
     snake_.push_back(fruit_);
     generateFruit();
     updateSpeed();
-		score_ += (scorePerFruit*scoreMultiplier_); 
-		updateScore();
+    score_ += (scorePerFruit*scoreMultiplier_); 
+    updateScore();
   // if collision with border
   } else if ((nextPosition[0] <= 0) ||
              (nextPosition[0] >= (height_ - 1)) ||
@@ -168,7 +168,7 @@ void Game::initGameBoard() {
 
   generateFruit();
 
-	updateScore();
+  updateScore();
 
   updateScreen();
 }
@@ -220,31 +220,31 @@ int getRandomNumber(int start, int end) {
 }
 
 Difficulty transformCharToDifficulty(char difficulty){
-	switch(difficulty){
-		case('1'): return snake::Easy;
-		case('2'): return snake::Medium;
-		case('3'): return snake::Hard;
-		case('4'): return snake::Extreme;
-		default: return snake::Invalid;
+  switch(difficulty){
+    case('1'): return snake::Easy;
+    case('2'): return snake::Medium;
+    case('3'): return snake::Hard;
+    case('4'): return snake::Extreme;
+    default: return snake::Invalid;
   }
 }
 
 Difficulty getDifficulty(){
-	char difficultyChar = ' ';
-	snake::Difficulty difficulty = snake::Invalid; 
-	std::cout << "Select your difficulty... " << std::endl;
-	std::cout << "  '1' = easy" << std::endl;
-	std::cout << "  '2' = normal" << std::endl;
-	std::cout << "  '3' = hard" << std::endl;
-	std::cout << "  '4' = extreme" << std::endl;
-	while(difficulty == snake::Invalid){
-		std::cin >> difficultyChar;		
-		difficulty = snake::transformCharToDifficulty(difficultyChar);
-		if(difficulty == snake::Invalid){
-			std::cout << "Invalid Difficulty Selected, try again..." << std::endl;
-		}
-	}
-	return difficulty;
+  char difficultyChar = ' ';
+  snake::Difficulty difficulty = snake::Invalid; 
+  std::cout << "Select your difficulty... " << std::endl;
+  std::cout << "  '1' = easy" << std::endl;
+  std::cout << "  '2' = normal" << std::endl;
+  std::cout << "  '3' = hard" << std::endl;
+  std::cout << "  '4' = extreme" << std::endl;
+  while(difficulty == snake::Invalid){
+    std::cin >> difficultyChar;   
+    difficulty = snake::transformCharToDifficulty(difficultyChar);
+    if(difficulty == snake::Invalid){
+      std::cout << "Invalid Difficulty Selected, try again..." << std::endl;
+    }
+  }
+  return difficulty;
 }
 
 }  // namespace snake

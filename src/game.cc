@@ -12,7 +12,7 @@
 #define SPEED 50
 
 int main() {
-	snake::Difficulty difficulty = snake::getDifficulty(); 
+  snake::Difficulty difficulty = snake::getDifficulty(); 
   snake::Game *game = new snake::Game(WIDTH, HEIGHT, SPEED, difficulty);
   snake::Direction d = snake::right;
   int lastKey = KEY_RIGHT;

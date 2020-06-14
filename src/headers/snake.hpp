@@ -20,7 +20,7 @@ enum Difficulty {
   Medium,
   Hard,
   Extreme,
-	Invalid
+  Invalid
 };
 
 int getRandomNumber(int, int);
@@ -37,7 +37,7 @@ class Game {
   ~Game();
   void initScreen();
   void updateScreen();
-	void updateScore();
+  void updateScore();
   void endGame();
   int getKey(int lastKey);
   int moveSnake(Direction);
@@ -57,8 +57,8 @@ class Game {
   int height_;
   int speed_;
   int speedIncrement_;
-	int scoreMultiplier_;
-	int score_;
+  int scoreMultiplier_;
+  int score_;
 };
 
 }  // namespace snake
