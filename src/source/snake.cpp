@@ -48,6 +48,7 @@ Game::~Game() {
 
 void Game::initScreen() {
   initscr();
+	curs_set(0);
   cbreak();
   timeout(0);
   keypad(stdscr, TRUE);
