@@ -200,4 +200,32 @@ int getRandomNumber(int start, int end) {
   return distr(gen);
 }
 
+Difficulty transformCharToDifficulty(char difficulty){
+	switch(difficulty){
+		case('1'): return snake::Easy;
+		case('2'): return snake::Medium;
+		case('3'): return snake::Hard;
+		case('4'): return snake::Extreme;
+		default: return snake::Invalid;
+  }
+}
+
+Difficulty getDifficulty(){
+	char difficultyChar = ' ';
+	snake::Difficulty difficulty = snake::Invalid; 
+	std::cout << "Select your difficulty... " << std::endl;
+	std::cout << "  '1' = easy" << std::endl;
+	std::cout << "  '2' = normal" << std::endl;
+	std::cout << "  '3' = hard" << std::endl;
+	std::cout << "  '4' = extreme" << std::endl;
+	while(difficulty == snake::Invalid){
+		std::cin >> difficultyChar;		
+		difficulty = snake::transformCharToDifficulty(difficultyChar);
+		if(difficulty == snake::Invalid){
+			std::cout << "Invalid Difficulty Selected, try again..." << std::endl;
+		}
+	}
+	return difficulty;
+}
+
 }  // namespace snake

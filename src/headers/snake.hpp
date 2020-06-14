@@ -19,10 +19,13 @@ enum Difficulty {
   Easy,
   Medium,
   Hard,
-  Extreme
+  Extreme,
+	Invalid
 };
 
 int getRandomNumber(int, int);
+Difficulty transformCharToDifficulty(char difficulty);
+snake::Difficulty getDifficulty();
 
 const char snakeChar = 'o';
 const int maxSpeed = 100;

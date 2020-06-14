@@ -10,10 +10,10 @@
 #define WIDTH 100
 #define HEIGHT 50
 #define SPEED 50
-#define DIFFICULTY snake::Extreme
 
 int main() {
-  snake::Game *game = new snake::Game(WIDTH, HEIGHT, SPEED, DIFFICULTY);
+	snake::Difficulty difficulty = snake::getDifficulty(); 
+  snake::Game *game = new snake::Game(WIDTH, HEIGHT, SPEED, difficulty);
   snake::Direction d = snake::right;
   int lastKey = KEY_RIGHT;
   bool terminateGame = false;
