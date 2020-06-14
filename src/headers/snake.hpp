@@ -29,6 +29,7 @@ snake::Difficulty getDifficulty();
 
 const char snakeChar = 'o';
 const int maxSpeed = 100;
+const int scorePerFruit = 10;
 
 class Game {
  public:
@@ -36,6 +37,7 @@ class Game {
   ~Game();
   void initScreen();
   void updateScreen();
+	void updateScore();
   void endGame();
   int getKey(int lastKey);
   int moveSnake(Direction);
@@ -55,6 +57,8 @@ class Game {
   int height_;
   int speed_;
   int speedIncrement_;
+	int scoreMultiplier_;
+	int score_;
 };
 
 }  // namespace snake

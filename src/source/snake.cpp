@@ -15,24 +15,29 @@ Game::Game(int width, int height, int speed, Difficulty d) {
   width_ = width;
   height_ = height;
   speed_ = speed;
+	score_ = 0;
   switch (d) {
     case Easy:
-      speedIncrement_ = 2;
+      speedIncrement_ = 1;
+			scoreMultiplier_ = 1; 
       break;
     case Medium:
-      speedIncrement_ = 5;
+      speedIncrement_ = 2;
+			scoreMultiplier_ = 2;
       break;
     case Hard:
-      speedIncrement_ = 7;
+      speedIncrement_ = 3;
+			scoreMultiplier_ = 3;
       break;
     case Extreme:
-      speedIncrement_ = 15;
+      speedIncrement_ = 5;
+			scoreMultiplier_ = 4;
       break;
     default:
       speedIncrement_ = 5;
+			scoreMultiplier_ = 2; 
       break;
   }
-  speedIncrement_ = 2;
   initScreen();
   initGameBoard();
 }
@@ -45,12 +50,12 @@ void Game::initScreen() {
   initscr();
   cbreak();
   timeout(0);
-  // noecho();
   keypad(stdscr, TRUE);
 }
 
 void Game::endGame() {
   endwin();
+	std::cout << "Final Score: " << score_ << std::endl;
 }
 
 int Game::getSpeed() {
@@ -63,6 +68,15 @@ void Game::updateScreen() {
       mvprintw(i, j, "%c", gameBoard_[i][j]);
     }
   }
+  refresh();
+}
+
+void Game::updateScore() {
+  // row 0, column will be the width + some number 
+	std::string s = std::to_string(score_);
+	char const *pchar = s.c_str();  
+	mvprintw(0, width_ + 3, "%s", "Score: ");  
+	mvprintw(0, width_ + 10, "%s", pchar);
   refresh();
 }
 
@@ -105,7 +119,9 @@ int Game::moveSnake(Direction d) {
     snake_.push_back(fruit_);
     generateFruit();
     updateSpeed();
-    // if collision with border
+		score_ += (scorePerFruit*scoreMultiplier_); 
+		updateScore();
+  // if collision with border
   } else if ((nextPosition[0] <= 0) ||
              (nextPosition[0] >= (height_ - 1)) ||
              (nextPosition[1] <= 0) ||
@@ -150,6 +166,8 @@ void Game::initGameBoard() {
   addSnake();
 
   generateFruit();
+
+	updateScore();
 
   updateScreen();
 }
