@@ -34,7 +34,7 @@ Game::Game(int width, int height, int speed, Difficulty d) {
       scoreMultiplier_ = 4;
       break;
     default:
-      speedIncrement_ = 5;
+      speedIncrement_ = 2;
       scoreMultiplier_ = 2; 
       break;
   }
@@ -48,6 +48,8 @@ Game::~Game() {
 
 void Game::initScreen() {
   initscr();
+  use_default_colors();
+  initColors();
   curs_set(0);
   cbreak();
   timeout(0);
@@ -64,9 +66,31 @@ int Game::getSpeed() {
 }
 
 void Game::updateScreen() {
+  char currentChar;
+  int currentPair;
   for (int i = 0; i < height_; i++) {
     for (int j = 0; j < width_; j++) {
+      currentChar = gameBoard_[i][j];
+      switch(currentChar){
+        case(snakeChar):
+          currentPair = SNAKE_PAIR;
+          break;
+        case(borderChar):
+          currentPair = BORDER_PAIR;
+          break;
+        case(fruitChar):
+          currentPair = FRUIT_PAIR;
+          break;
+        case(emptyChar):
+          currentPair = EMPTY_PAIR;
+          break;
+        default:
+          currentPair = SNAKE_PAIR;;
+          break;
+      }
+      attron(COLOR_PAIR(currentPair));
       mvprintw(i, j, "%c", gameBoard_[i][j]);
+      attroff(COLOR_PAIR(currentPair));
     }
   }
   refresh();
@@ -79,6 +103,16 @@ void Game::updateScore() {
   mvprintw(0, width_ + 3, "%s", "Score: ");  
   mvprintw(0, width_ + 10, "%s", pchar);
   refresh();
+}
+
+void Game::showSpeed() {
+  std::string max = std::to_string(maxSpeed);
+  std::string s = std::to_string(speed_);
+  char const *pchar = s.c_str();
+  char const *maxChar = max.c_str();
+  mvprintw(2, width_ + 3, "%s", "Speed/MaxSpeed: ");  
+  mvprintw(2, width_ + 19, "%s/%s", pchar, maxChar);
+  refresh(); 
 }
 
 int Game::getKey(int lastKey) {
@@ -131,7 +165,7 @@ int Game::moveSnake(Direction d) {
   } else if (isSnakeCollision(nextPosition)) {
     return 0;
   } else {
-    gameBoard_[snake_[0][0]][snake_[0][1]] = ' ';
+    gameBoard_[snake_[0][0]][snake_[0][1]] = emptyChar;
     snake_.erase(snake_.begin());
     snake_.push_back(nextPosition);
     gameBoard_[nextPosition[0]][nextPosition[1]] = snakeChar;
@@ -145,17 +179,17 @@ void Game::initGameBoard() {
   std::vector<char> currentLine;
   // push back first line of ########
   for (int i = 0; i < width_; i++) {
-    borderLine.push_back('#');
+    borderLine.push_back(borderChar);
   }
   gameBoard_.push_back(borderLine);
 
   // push back remaining empty space + # border
   currentLine.clear();
-  currentLine.push_back('#');
+  currentLine.push_back(borderChar);
   for (int j = 0; j < (width_ - 2); j++) {
-    currentLine.push_back(' ');
+    currentLine.push_back(emptyChar);
   }
-  currentLine.push_back('#');
+  currentLine.push_back(borderChar);
 
   for (int i = 0; i < (height_ - 2); i++) {
     gameBoard_.push_back(currentLine);
@@ -169,6 +203,8 @@ void Game::initGameBoard() {
   generateFruit();
 
   updateScore();
+
+  showSpeed();
 
   updateScreen();
 }
@@ -191,7 +227,7 @@ void Game::generateFruit() {
   }
   fruit_.push_back(getRandomNumber(2, height_ - 3));
   fruit_.push_back(getRandomNumber(2, width_ - 3));
-  gameBoard_[fruit_[0]][fruit_[1]] = '@';
+  gameBoard_[fruit_[0]][fruit_[1]] = fruitChar;
 }
 
 bool Game::isSnakeCollision(const std::vector<int>& nextPos) {
@@ -204,11 +240,25 @@ bool Game::isSnakeCollision(const std::vector<int>& nextPos) {
 }
 
 void Game::updateSpeed() {
-  if ((speed_ + speedIncrement_) < maxSpeed) {
+  // Clamp snake speed at 20 less than the max
+  // to get minimum 20 ms delay in ticks
+  if ((speed_ + speedIncrement_) < (maxSpeed - 20)) {
     speed_ += speedIncrement_;
   } else {
-    speed_ = maxSpeed;
+    speed_ = (maxSpeed - 20);
   }
+  showSpeed();
+}
+
+void Game::initColors() {
+  // if snake, background -1, foreground green
+  // if border, background red, foreground red
+  // if fruit, background -1, foreground magenta
+  start_color();
+  init_pair(SNAKE_PAIR, COLOR_GREEN, -1);
+  init_pair(BORDER_PAIR, COLOR_RED, COLOR_RED);
+  init_pair(FRUIT_PAIR, COLOR_YELLOW, -1);
+  init_pair(EMPTY_PAIR, -1, -1);
 }
 
 int getRandomNumber(int start, int end) {
