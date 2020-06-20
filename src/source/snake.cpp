@@ -32,6 +32,7 @@ Game::Game(int width, int height, int speed, Difficulty d) {
     case Extreme:
       speedIncrement_ = 5;
       scoreMultiplier_ = 4;
+      speed_ = snake::maxSpeed - 20;
       break;
     default:
       speedIncrement_ = 2;
