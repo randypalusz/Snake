@@ -19,7 +19,7 @@ Game::Game(int width, int height, int speed, Difficulty d) {
   switch (d) {
     case Easy:
       speedIncrement_ = 1;
-      scoreMultiplier_ = 1; 
+      scoreMultiplier_ = 1;
       break;
     case Medium:
       speedIncrement_ = 2;
@@ -36,7 +36,7 @@ Game::Game(int width, int height, int speed, Difficulty d) {
       break;
     default:
       speedIncrement_ = 2;
-      scoreMultiplier_ = 2; 
+      scoreMultiplier_ = 2;
       break;
   }
   initScreen();
@@ -72,21 +72,21 @@ void Game::updateScreen() {
   for (int i = 0; i < height_; i++) {
     for (int j = 0; j < width_; j++) {
       currentChar = gameBoard_[i][j];
-      switch(currentChar){
-        case(snakeChar):
+      switch (currentChar) {
+        case (snakeChar):
           currentPair = SNAKE_PAIR;
           break;
-        case(borderChar):
+        case (borderChar):
           currentPair = BORDER_PAIR;
           break;
-        case(fruitChar):
+        case (fruitChar):
           currentPair = FRUIT_PAIR;
           break;
-        case(emptyChar):
+        case (emptyChar):
           currentPair = EMPTY_PAIR;
           break;
         default:
-          currentPair = SNAKE_PAIR;;
+          currentPair = SNAKE_PAIR;
           break;
       }
       attron(COLOR_PAIR(currentPair));
@@ -98,10 +98,10 @@ void Game::updateScreen() {
 }
 
 void Game::updateScore() {
-  // row 0, column will be the width + some number 
+  // row 0, column will be the width + some number
   std::string s = std::to_string(score_);
-  char const *pchar = s.c_str();  
-  mvprintw(0, width_ + 3, "%s", "Score: ");  
+  char const *pchar = s.c_str();
+  mvprintw(0, width_ + 3, "%s", "Score: ");
   mvprintw(0, width_ + 10, "%s", pchar);
   refresh();
 }
@@ -111,9 +111,9 @@ void Game::showSpeed() {
   std::string s = std::to_string(speed_);
   char const *pchar = s.c_str();
   char const *maxChar = max.c_str();
-  mvprintw(2, width_ + 3, "%s", "Speed/MaxSpeed: ");  
+  mvprintw(2, width_ + 3, "%s", "Speed/MaxSpeed: ");
   mvprintw(2, width_ + 19, "%s/%s", pchar, maxChar);
-  refresh(); 
+  refresh();
 }
 
 int Game::getKey(int lastKey) {
@@ -155,9 +155,9 @@ int Game::moveSnake(Direction d) {
     snake_.push_back(fruit_);
     generateFruit();
     updateSpeed();
-    score_ += (scorePerFruit*scoreMultiplier_); 
+    score_ += (scorePerFruit * scoreMultiplier_);
     updateScore();
-  // if collision with border
+    // if collision with border
   } else if ((nextPosition[0] <= 0) ||
              (nextPosition[0] >= (height_ - 1)) ||
              (nextPosition[1] <= 0) ||
@@ -231,7 +231,7 @@ void Game::generateFruit() {
   gameBoard_[fruit_[0]][fruit_[1]] = fruitChar;
 }
 
-bool Game::isSnakeCollision(const std::vector<int>& nextPos) {
+bool Game::isSnakeCollision(const std::vector<int> &nextPos) {
   for (auto i : snake_) {
     if (i == nextPos) {
       return true;
@@ -270,28 +270,33 @@ int getRandomNumber(int start, int end) {
   return distr(gen);
 }
 
-Difficulty transformCharToDifficulty(char difficulty){
-  switch(difficulty){
-    case('1'): return snake::Easy;
-    case('2'): return snake::Medium;
-    case('3'): return snake::Hard;
-    case('4'): return snake::Extreme;
-    default: return snake::Invalid;
+Difficulty transformCharToDifficulty(char difficulty) {
+  switch (difficulty) {
+    case ('1'):
+      return snake::Easy;
+    case ('2'):
+      return snake::Medium;
+    case ('3'):
+      return snake::Hard;
+    case ('4'):
+      return snake::Extreme;
+    default:
+      return snake::Invalid;
   }
 }
 
-Difficulty getDifficulty(){
+Difficulty getDifficulty() {
   char difficultyChar = ' ';
-  snake::Difficulty difficulty = snake::Invalid; 
+  snake::Difficulty difficulty = snake::Invalid;
   std::cout << "Select your difficulty... " << std::endl;
   std::cout << "  '1' = easy" << std::endl;
   std::cout << "  '2' = normal" << std::endl;
   std::cout << "  '3' = hard" << std::endl;
   std::cout << "  '4' = extreme" << std::endl;
-  while(difficulty == snake::Invalid){
-    std::cin >> difficultyChar;   
+  while (difficulty == snake::Invalid) {
+    std::cin >> difficultyChar;
     difficulty = snake::transformCharToDifficulty(difficultyChar);
-    if(difficulty == snake::Invalid){
+    if (difficulty == snake::Invalid) {
       std::cout << "Invalid Difficulty Selected, try again..." << std::endl;
     }
   }
