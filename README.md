@@ -4,6 +4,7 @@ This was intended to be an exercise in creating a simple game utilizing simple 2
 - ncurses
 - clang/clang++
 - any terminal that supports color preferably using a square font
+  - using this one: http://strlen.com/square/
 
 # Building
 From the root directory, run the following:
